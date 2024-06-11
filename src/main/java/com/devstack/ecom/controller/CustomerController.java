@@ -1,30 +1,54 @@
 package com.devstack.ecom.controller;
 
 import com.devstack.ecom.dto.request.RequestCustomerDto;
+import com.devstack.ecom.service.CustomerService;
+import com.devstack.ecom.util.StandardResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("api/v1/customers")
 public class CustomerController {
 
+    private final CustomerService customerService;
+
     @PostMapping
-    public String create(@RequestBody RequestCustomerDto customerDto){
-        return "create()";
+    public ResponseEntity<StandardResponse> create(@RequestBody RequestCustomerDto customerDto) {
+        customerService.create(customerDto);
+        return new ResponseEntity<>(
+                new StandardResponse(201,"Customer created",customerDto.getName()),
+                HttpStatus.CREATED
+        );
     }
 
-    @PutMapping
-    public String update(@RequestBody RequestCustomerDto customerDto){
-        return "update()";
+    @PutMapping("/{id}")
+    public ResponseEntity<StandardResponse> update(@PathVariable String id,
+                                                   @RequestBody RequestCustomerDto customerDto){
+        customerService.update(id,customerDto);
+        return new ResponseEntity<>(
+                new StandardResponse(201,"Customer updated!..",null),
+                HttpStatus.CREATED
+        );
     }
 
     @GetMapping("/{id}")
-    public String getById(@PathVariable String id){
-        return "getById()";
+    public ResponseEntity<StandardResponse> getById(@PathVariable String id){
+        return new ResponseEntity<>(
+                new StandardResponse(200,"Customer data!..",customerService.findById(id)),
+                HttpStatus.OK
+        );
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable String id){
-        return "delete()";
+    public ResponseEntity<StandardResponse> delete(@PathVariable String id){
+        customerService.delete(id);
+        return new ResponseEntity<>(
+                new StandardResponse(204,"Customer deleted!..",null),
+                HttpStatus.NO_CONTENT
+        );
     }
 
     @GetMapping("/list")
