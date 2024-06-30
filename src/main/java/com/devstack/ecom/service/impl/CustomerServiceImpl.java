@@ -2,10 +2,12 @@ package com.devstack.ecom.service.impl;
 
 import com.devstack.ecom.dto.request.RequestCustomerDto;
 import com.devstack.ecom.dto.response.ResponseCustomerDto;
+import com.devstack.ecom.dto.response.paginate.CustomerPaginateDto;
 import com.devstack.ecom.entity.Customer;
 import com.devstack.ecom.repo.CustomerRepo;
 import com.devstack.ecom.service.CustomerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -57,6 +59,17 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void delete(String id) {
         customerRepo.deleteById(id);
+    }
+
+    @Override
+    public CustomerPaginateDto findAll(String searchText, int page, int size) {
+        return CustomerPaginateDto.builder()
+                .dataList(customerRepo.findAllWithSearchText(searchText, PageRequest.of(page, size))
+                        .stream().map(this::toResponseCustomerDto).toList())
+                .count(
+                        customerRepo.countAllWithSearchText(searchText)
+                )
+                .build();
     }
 
     private ResponseCustomerDto toResponseCustomerDto(Customer customer){

@@ -52,12 +52,16 @@ public class CustomerController {
     }
 
     @GetMapping("/list")
-    public String findAll(
+    public ResponseEntity<StandardResponse>findAll(
          @RequestParam String searchText,
          @RequestParam int page,
          @RequestParam int size
     ){
-        return "findAll()";
+        return new ResponseEntity<>(
+                new StandardResponse(200,"Customer list!..",
+                        customerService.findAll(searchText, page, size)),
+                HttpStatus.OK
+        );
     }
 
 
