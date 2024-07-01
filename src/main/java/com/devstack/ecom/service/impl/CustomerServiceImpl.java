@@ -4,6 +4,7 @@ import com.devstack.ecom.dto.request.RequestCustomerDto;
 import com.devstack.ecom.dto.response.ResponseCustomerDto;
 import com.devstack.ecom.dto.response.paginate.CustomerPaginateDto;
 import com.devstack.ecom.entity.Customer;
+import com.devstack.ecom.exception.EntryNotFoundException;
 import com.devstack.ecom.repo.CustomerRepo;
 import com.devstack.ecom.service.CustomerService;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,7 @@ public class CustomerServiceImpl implements CustomerService {
     public ResponseCustomerDto findById(String id) {
         Optional<Customer> selectedCustomer = customerRepo.findById(id);
         if (selectedCustomer.isEmpty()){
-            throw new RuntimeException("Customer Not Found");
+            throw new EntryNotFoundException("Customer Not Found");
         }
         return toResponseCustomerDto(selectedCustomer.get());
     }
@@ -45,7 +46,7 @@ public class CustomerServiceImpl implements CustomerService {
     public void update(String id, RequestCustomerDto customerDto) {
         Optional<Customer> selectedCustomer = customerRepo.findById(id);
         if (selectedCustomer.isEmpty()){
-            throw new RuntimeException("Customer Not Found");
+            throw new EntryNotFoundException("Customer Not Found");
         }
         Customer customer = selectedCustomer.get();
         customer.setName(customerDto.getName());
