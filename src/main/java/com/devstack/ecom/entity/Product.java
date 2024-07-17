@@ -3,7 +3,9 @@ package com.devstack.ecom.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,5 +22,8 @@ public class Product {
     private String description;
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
-    private HashSet<ProductImage> images = new HashSet<>();
+    private List<ProductImage> images = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
+    private List<CustomerOrder> orders= new ArrayList<>();
 }
