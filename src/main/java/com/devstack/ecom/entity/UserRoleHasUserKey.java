@@ -2,6 +2,7 @@ package com.devstack.ecom.entity;
 
 import jakarta.persistence.Column;
 
+
 import jakarta.persistence.Embeddable;
 import lombok.EqualsAndHashCode;
 

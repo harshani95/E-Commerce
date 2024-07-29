@@ -1,5 +1,6 @@
 package com.devstack.ecom.adviser;
 
+import com.devstack.ecom.exception.DuplicateEntryException;
 import com.devstack.ecom.exception.EntryNotFoundException;
 import com.devstack.ecom.util.StandardResponse;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,13 @@ public class AppWideExceptionHandler {
         return new ResponseEntity<>(
                 new StandardResponse(404,e.getMessage(),e),
                 HttpStatus.NOT_FOUND
+        );
+    }
+
+    @ExceptionHandler(DuplicateEntryException.class)
+    public ResponseEntity<StandardResponse> handleDuplicateEntryException(DuplicateEntryException e){
+        return new ResponseEntity<>(
+                new StandardResponse(409,e.getMessage(),e), HttpStatus.CONFLICT
         );
     }
 }

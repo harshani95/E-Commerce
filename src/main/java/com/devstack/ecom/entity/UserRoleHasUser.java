@@ -1,18 +1,17 @@
 package com.devstack.ecom.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Table(name="user_role_has_user")
 @Entity
 @Getter
 @Setter
+@Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class UserRoleHasUser {
+
     @EmbeddedId
     private UserRoleHasUserKey idUserRoleHasUserKey = new UserRoleHasUserKey();
 
