@@ -1,6 +1,8 @@
 package com.devstack.ecom.security;
 
 import com.devstack.ecom.jwt.JwtConfig;
+import com.devstack.ecom.jwt.JwtTokenVerifier;
+import com.devstack.ecom.jwt.JwtUsernameAndPasswordAuthenticationFilter;
 import com.devstack.ecom.service.impl.ApplicationUserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -11,8 +13,11 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
 import javax.crypto.SecretKey;
@@ -50,7 +55,20 @@ public class ApplicationSecurityConfig {
         corsConfiguration.setAllowCredentials(false);
         corsConfiguration.setExposedHeaders(List.of("Authorization"));
 
-        return (SecurityFilterChain) corsConfiguration;
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(request -> corsConfiguration))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(http), jwtConfig, secretKey))
+                .addFilterAfter(new JwtTokenVerifier(jwtConfig, secretKey), UsernamePasswordAuthenticationFilter.class)
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(
+                                "/api/v1/user/register/**")
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated());
+
+        return http.build();
     }
 
     @Bean
@@ -66,6 +84,7 @@ public class ApplicationSecurityConfig {
         return security.getSharedObject(AuthenticationManager.class);
     }
 
+    @Bean
     public void configure(AuthenticationManagerBuilder managerBuilder){
         managerBuilder.authenticationProvider(daoAuthenticationProvider());
     }

@@ -35,7 +35,7 @@ public class ApplicationUserServiceImpl implements UserDetailsService {
 
         }
 
-        List<UserRoleHasUser> roleList = userRoleHasUserRepo.findByUser(selectedUser.get().getUserId());
+        List<UserRoleHasUser> roleList = userRoleHasUserRepo.findByUserId(selectedUser.get().getUserId());
         Set<SimpleGrantedAuthority> grantedAuthorities = new HashSet<>();
 
         for (UserRoleHasUser u : roleList) {
