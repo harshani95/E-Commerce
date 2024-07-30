@@ -63,7 +63,7 @@ public class ApplicationSecurityConfig {
                 .addFilterAfter(new JwtTokenVerifier(jwtConfig, secretKey), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
-                                "/api/v1/user/register/**")
+                                "/api/v1/users/visitor/**")
                         .permitAll()
                         .anyRequest()
                         .authenticated());
