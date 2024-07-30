@@ -57,5 +57,34 @@ public class UserServiceImpl implements UserService {
         userRoleHasUserRepo.save(userRoleHasUser);
     }
 
+    @Override
+    public void initializeAdmin() {
+        Optional<User> byEmail = userRepo.findByEmail("admin@gmail.com");
+        if (byEmail.isEmpty()) {
+            User user = User.builder()
+                    .userId(UUID.randomUUID().toString())
+                    .email("admin@gmail.com")
+                    .displayName("admin")
+                    .isEnabled(true)
+                    .isAccountNonLocked(true)
+                    .isCredentialsNonExpired(true)
+                    .isAccountNonExpired(true)
+                    .password(passwordEncoder.encode("12345"))
+                    .build();
+
+            Optional<UserRole> selectedRole = roleRepo.findUserRoleByRoleName("ADMIN");
+            if (selectedRole.isEmpty()) {
+                throw new EntryNotFoundException("Role not found");
+            }
+            userRepo.save(user);
+            UserRoleHasUser userRoleHasUser = UserRoleHasUser.builder()
+                    .user(user)
+                    .userRole(selectedRole.get())
+                    .build();
+            userRoleHasUserRepo.save(userRoleHasUser);
+        }
+
     }
+
+}
 

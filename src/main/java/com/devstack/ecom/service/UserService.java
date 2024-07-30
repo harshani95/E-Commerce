@@ -4,4 +4,5 @@ import com.devstack.ecom.dto.request.RequestUserDto;
 
 public interface UserService {
     public void create(RequestUserDto dto, String roleType);
+    public void initializeAdmin();
 }
