@@ -5,6 +5,7 @@ import com.devstack.ecom.entity.User;
 import com.devstack.ecom.entity.UserRole;
 import com.devstack.ecom.exception.EntryNotFoundException;
 import com.devstack.ecom.repo.UserRepo;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +19,7 @@ import java.util.Set;
 
 import static com.devstack.ecom.security.ApplicationUserRole.*;
 
+@Transactional
 @Service
 @RequiredArgsConstructor
 public class ApplicationUserServiceImpl implements UserDetailsService {

@@ -63,6 +63,7 @@ public class UserServiceImpl implements UserService {
             if (selectedRole.isEmpty()) {
                 throw new EntryNotFoundException("Role not found");
             }
+
             HashSet<UserRole> objects = new HashSet<>();
             objects.add(selectedRole.get());
             User user = User.builder()
