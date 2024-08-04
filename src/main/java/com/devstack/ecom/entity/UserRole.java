@@ -18,13 +18,12 @@ public class UserRole {
     @Column(name = "role_id", length = 80)
     private String roleId;
 
-    @Column(name = "role_nae", length = 100)
+    @Column(name = "role_name", length = 100)
     private String roleName;
 
     @Column(name = "description", length = 100)
     private String description;
 
-
-    @OneToMany(mappedBy = "userRole", fetch = FetchType.LAZY)
-    private Set<UserRoleHasUser> userRoleHasUsers;
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users;
 }

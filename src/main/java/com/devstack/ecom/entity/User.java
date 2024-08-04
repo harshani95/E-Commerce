@@ -39,7 +39,12 @@ public class User {
     @Column(name = "is_enabled", columnDefinition = "TINYINT")
     private boolean isEnabled;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private Set<UserRoleHasUser> userRoleHasUsers;
+    @ManyToMany
+    @JoinTable(
+            name = "user_user_role", // Join table name
+            joinColumns = @JoinColumn(name = "user_id"), // Foreign key column in the join table for User
+            inverseJoinColumns = @JoinColumn(name = "role_id") // Foreign key column in the join table for UserRole
+    )
+    private Set<UserRole> roles;
 
 }
