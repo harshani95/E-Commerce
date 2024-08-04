@@ -6,6 +6,7 @@ import com.devstack.ecom.util.StandardResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,6 +17,7 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<StandardResponse> create(@RequestBody RequestProductDto productDto) {
         productService.create(productDto);
         return new ResponseEntity<>(
@@ -25,6 +27,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<StandardResponse> get(@PathVariable String id) {
         return new ResponseEntity<>(
                 new StandardResponse(200,"Product data!..",productService.findById(id)),
@@ -33,6 +36,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<StandardResponse> update(@PathVariable String id,
                                                    @RequestBody RequestProductDto productDto) {
         productService.update(id,productDto);
@@ -43,6 +47,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<StandardResponse> delete(@PathVariable String id) {
         productService.delete(id);
         return new ResponseEntity<>(
@@ -52,6 +57,7 @@ public class ProductController {
     }
 
     @GetMapping("/list")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<StandardResponse> getAll(
             @RequestParam String searchText,
             @RequestParam int page,
